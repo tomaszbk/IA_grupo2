@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "mlflow>=2.22.0",
+    "pytorch-lightning>=2.5.1.post0",
 ]
 
 [project.optional-dependencies]
