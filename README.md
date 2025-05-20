@@ -14,8 +14,11 @@ or
 
 Este proyecto implementa una red neuronal convolucional (CNN) en PyTorch para clasificar imágenes de botellas de agua como "en buen estado" o "rotas".
 
-## Instalación de dependencias (ejecutar en terminal):
+## Instalación de dependencias:
+Ejecutar en terminal:
+```
 pip install torch torchvision opencv-python matplotlib
+```
 
 ## Estructura del proyecto
 ```
