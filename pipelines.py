@@ -9,7 +9,7 @@ import torchvision.transforms.v2 as transforms
 #   with mean 0.5 and std 0.5 to bring values to [-1, 1].
 #   Or, calculate mean and std from your specific dataset.
 #   For this example, we'll use a simple 0.5, 0.5 normalization.
-image_transforms = transforms.Compose(
+preprocessing_pipeline = transforms.Compose(
     [
         transforms.Resize((128, 128)),
         transforms.Grayscale(num_output_channels=1),
@@ -23,7 +23,10 @@ augmentation_pipeline = transforms.Compose(
     [
         transforms.RandomHorizontalFlip(),
         transforms.RandomRotation(15),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.5], std=[0.5]),  # [-1, 1] range for grayscale
     ]
+)
+
+augment_and_preprocess_pipeline = transforms.Compose(
+    augmentation_pipeline,
+    preprocessing_pipeline,
 )
