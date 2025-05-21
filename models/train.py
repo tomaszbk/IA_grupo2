@@ -16,12 +16,12 @@ EPOCHS = 50
 LEARNING_RATE = 0.001
 IMG_SIZE = 128
 DATA_DIR = "./data/"
-MODEL_PATH = "model.pth"
+MODEL_PATH = "models/model.pth"
 TRAIN_SPLIT_PERCENT = 0.8
 SEED = 42
 
-def train_model(model_class, use_all_data):
 
+def train_model(model_class, use_all_data):
     # Definir nombre del experimento automáticamente
     if use_all_data:
         experiment_name = f"{model_class.__name__}_all_data"
@@ -64,17 +64,25 @@ def train_model(model_class, use_all_data):
     if use_all_data:
         train_loader = DataLoader(combined_dataset, batch_size=BATCH_SIZE, shuffle=True)
         test_loader = None
-        mlflow_logger.experiment.log_param(mlflow_logger.run_id, "train_size", len(combined_dataset))
+        mlflow_logger.experiment.log_param(
+            mlflow_logger.run_id, "train_size", len(combined_dataset)
+        )
         mlflow_logger.experiment.log_param(mlflow_logger.run_id, "test_size", 0)
     else:
         n_train = int(TRAIN_SPLIT_PERCENT * len(combined_dataset))
         n_test = len(combined_dataset) - n_train
         gen = torch.Generator().manual_seed(SEED)
-        train_ds, test_ds = random_split(combined_dataset, [n_train, n_test], generator=gen)
+        train_ds, test_ds = random_split(
+            combined_dataset, [n_train, n_test], generator=gen
+        )
         train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
         test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE)
-        mlflow_logger.experiment.log_param(mlflow_logger.run_id, "train_size", len(train_ds))
-        mlflow_logger.experiment.log_param(mlflow_logger.run_id, "test_size", len(test_ds))
+        mlflow_logger.experiment.log_param(
+            mlflow_logger.run_id, "train_size", len(train_ds)
+        )
+        mlflow_logger.experiment.log_param(
+            mlflow_logger.run_id, "test_size", len(test_ds)
+        )
 
     callback = LogMisclassifiedImages(
         mlflow_logger, max_images=20, class_names=dataset.classes
@@ -92,9 +100,10 @@ def train_model(model_class, use_all_data):
         trainer.test(model, test_loader)
 
     if use_all_data:
-         torch.save(model.state_dict(), MODEL_PATH)
-         print(f"Modelo guardado en {MODEL_PATH}")
+        torch.save(model.state_dict(), MODEL_PATH)
+        print(f"Modelo guardado en {MODEL_PATH}")
+
 
 # Ejemplo de uso:
 if __name__ == "__main__":
-    train_model(BottleCNN, use_all_data=False)  
+    train_model(BottleCNN, use_all_data=False)
