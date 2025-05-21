@@ -18,11 +18,15 @@ Ejecutar la UI de mlflow:
 
 Entrenar el modelo CNN:
 
-`uv run models/train.py --extra cpu`
+`uv run --extra cpu models/train.py`
 
 o con CUDA usar
 
-`uv run models/train.py --extra cu128`
+`uv run --extra cu128 models/train.py`
+
+Agregar una dependencia:
+
+`uv add <nombre_dependencia>`
 
 # Proyecto clasificador_cnn:
 

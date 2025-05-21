@@ -24,7 +24,7 @@ preprocessing_pipeline = transforms.Compose(
 augmentation_pipeline = transforms.Compose(
     [
         transforms.RandomHorizontalFlip(),
-        transforms.RandomRotation(15),
+        transforms.RandomRotation(25, fill=255),
     ]
 )
 
