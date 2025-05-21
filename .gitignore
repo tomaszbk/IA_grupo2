@@ -52,7 +52,6 @@ ipython_config.py
 .venv
 
 # Data files
-data/
 datasets/
 *.h5
 *.hdf5
@@ -61,7 +60,6 @@ datasets/
 *.csv
 
 # Model weights
-models/
 checkpoints/
 *.pth
 *.pt
@@ -75,3 +73,9 @@ runs/
 
 # Windows
 Thumbs.db
+
+mlruns/
+
+lightning_logs/
+
+misclassified/

@@ -1,32 +1,37 @@
+# Instalacion y ejecucion
 Descargar uv:
+
 Bash:
 `curl -LsSf https://astral.sh/uv/install.sh | sh`
 windows:
 `wget -qO- https://astral.sh/uv/install.sh | sh`
 
 Setup:
+
 `uv sync --extra cpu`
 or
 `uv sync --extra cu128`
 
+Ejecutar la UI de mlflow:
+
+`mlflow ui --backend-store-uri ./mlruns`
+
+Entrenar el modelo CNN:
+
+`uv run models/train.py --extra cpu`
+
+o con CUDA usar
+
+`uv run models/train.py --extra cu128`
 
 # Proyecto clasificador_cnn:
 
 Este proyecto implementa una red neuronal convolucional (CNN) en PyTorch para clasificar imágenes de botellas de agua como "en buen estado" o "rotas".
 
-## Instalación de dependencias:
-Ejecutar en terminal:
-```
-pip install torch torchvision opencv-python matplotlib
-```
 
 ## Estructura del proyecto
 ```
-clasificador_cnn/
-├── data/
-│ └── train/
-│   ├── broken/ -> Fotos de botellas en rotas
-│   └── good/ -> Fotos de botellas en buen estado
+models/
 ├── model.pth -> Modelo entrenado (se genera luego de entrenar)
 ├── cnn_model.py -> Definición de la CNN
 ├── train.py -> Script de entrenamiento
@@ -34,10 +39,6 @@ clasificador_cnn/
 ```
 
 ## Entrenar modelo
-Para entrenar el modelo, ejecutá:
-```
-python train.py
-```
 
 Esto va a entrenar el modelo con las imágenes de data/train y guardar el modelo en model.pth
 
@@ -45,7 +46,7 @@ Esto va a entrenar el modelo con las imágenes de data/train y guardar el modelo
 
 Para clasificar una imagen nueva, usá:
 ```
-python predict.py ruta/a/la/imagen.jpg
+uv run models/predict.py ruta/a/la/imagen.jpg
 ```
 El script mostrará algo como:
 
