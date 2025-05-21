@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = "==3.12.10"
 dependencies = [
+    "gradio>=5.30.0",
     "mlflow>=2.22.0",
     "pytorch-lightning>=2.5.1.post0",
 ]

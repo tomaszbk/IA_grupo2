@@ -1,17 +1,12 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
+import gradio as gr
 import torch
 import torch.nn.functional as F
-from PIL import Image
-import gradio as gr
-
 from cnn_model import BottleCNN
+from PIL import Image
 from pipelines import preprocessing_pipeline
 
 # Configuración
-MODEL_PATH = "model.pth"  # <- usando el archivo .pth
+MODEL_PATH = "models/model.pth"  # <- usando el archivo .pth
 CLASS_NAMES = ["Rota", "En buen estado"]
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -20,6 +15,7 @@ model = BottleCNN()
 model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
 model.to(DEVICE)
 model.eval()
+
 
 # Función de predicción
 def predict(img: Image.Image):
@@ -32,10 +28,11 @@ def predict(img: Image.Image):
         label = CLASS_NAMES[predicted_class]
         return f"{label} ({confidence * 100:.2f}% de confianza)"
 
+
 # Interfaz Gradio
 gr.Interface(
     fn=predict,
     inputs=gr.Image(type="pil"),
     outputs="text",
-    title="Clasificador de Botellas"
+    title="Clasificador de Botellas",
 ).launch()

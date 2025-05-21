@@ -89,5 +89,5 @@ trainer.fit(model, train_loader)
 trainer.test(model, test_loader)
 
 # Guardar el modelo como .pth después de entrenar
-torch.save(model.state_dict(), "model.pth")
+torch.save(model.state_dict(), "models/model.pth")
 print("✅ Modelo guardado como model.pth")
