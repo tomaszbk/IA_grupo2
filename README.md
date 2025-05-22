@@ -6,6 +6,10 @@ Bash:
 windows:
 `wget -qO- https://astral.sh/uv/install.sh | sh`
 
+o
+
+`powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+
 Setup:
 
 `uv sync --extra cpu`
