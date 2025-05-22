@@ -5,26 +5,29 @@ import mlflow
 import torch
 import torch.nn.functional as F
 from cnn_model import BottleCNN
+from mlp_model import BottleMLP
 from PIL import Image
 from pipelines import preprocessing_pipeline
 
 # Configuración
-MODEL_PATH = "models/model.pth"  # <- usando el archivo .pth
 CLASS_NAMES = ["Rota", "En buen estado"]
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 mlflow.set_tracking_uri("file:./mlruns")
 mlflow.set_experiment("Bottle_Predictions")
 
-# Cargar modelo
-model = BottleCNN()
-model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
-model.to(DEVICE)
-model.eval()
-
 
 # Función de predicción
-def predict(img: Image.Image):
+def predict(img: Image.Image, model_class_name: str):
+    # Convert string to actual class
+    model_class = BottleCNN if model_class_name == "BottleCNN" else BottleMLP
+
+    model_path = f"models/{model_class.__name__}.pth"
+    model = model_class()
+    model.load_state_dict(torch.load(model_path, map_location=DEVICE))
+    model.to(DEVICE)
+    model.eval()
+
     # start a new MLflow run for this prediction
     with mlflow.start_run(run_name=f"pred-{uuid.uuid4()}"):
         # log the raw input image under artifacts
@@ -48,7 +51,12 @@ def predict(img: Image.Image):
 # Interfaz Gradio
 gr.Interface(
     fn=predict,
-    inputs=gr.Image(type="pil"),
+    inputs=[
+        gr.Image(type="pil"),
+        gr.Dropdown(
+            choices=["BottleCNN", "BottleMLP"], value="BottleCNN", label="Modelo"
+        ),
+    ],
     outputs="text",
     title="Clasificador de Botellas",
 ).launch()

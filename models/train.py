@@ -1,14 +1,16 @@
 from collections import Counter
 from datetime import datetime
 
+import pytorch_lightning as pl
 import torch
-from callbacks import LogMisclassifiedImages
-from cnn_model import BottleCNN
-from pipelines import augment_and_preprocess_pipeline, preprocessing_pipeline
 from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import MLFlowLogger
 from torch.utils.data import DataLoader, random_split
 from torchvision import datasets
+
+from models.callbacks import LogMisclassifiedImages
+from models.cnn_model import BottleCNN
+from models.pipelines import augment_and_preprocess_pipeline, preprocessing_pipeline
 
 # Configuración general
 BATCH_SIZE = 16
@@ -16,12 +18,11 @@ EPOCHS = 50
 LEARNING_RATE = 0.001
 IMG_SIZE = 128
 DATA_DIR = "./data/"
-MODEL_PATH = "models/model.pth"
 TRAIN_SPLIT_PERCENT = 0.8
 SEED = 42
 
 
-def train_model(model_class, use_all_data):
+def train_model(model_class: pl.LightningModule, use_all_data):
     # Definir nombre del experimento automáticamente
     if use_all_data:
         experiment_name = f"{model_class.__name__}_all_data"
@@ -100,8 +101,9 @@ def train_model(model_class, use_all_data):
         trainer.test(model, test_loader)
 
     if use_all_data:
-        torch.save(model.state_dict(), MODEL_PATH)
-        print(f"Modelo guardado en {MODEL_PATH}")
+        model_path = f"models/{model_class.__name__}.pth"
+        torch.save(model.state_dict(), model_path)
+        print(f"Modelo guardado en {model_path}")
 
 
 # Ejemplo de uso:
