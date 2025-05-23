@@ -14,7 +14,7 @@ from models.pipelines import augment_and_preprocess_pipeline, preprocessing_pipe
 
 # Configuración general
 BATCH_SIZE = 16
-EPOCHS = 5
+EPOCHS = 1
 LEARNING_RATE = 0.001
 IMG_SIZE = 128
 DATA_DIR = "./data/"

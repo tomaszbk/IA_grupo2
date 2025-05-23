@@ -34,7 +34,6 @@ class BottleCNN(pl.LightningModule):
         self.sigmoid = nn.Sigmoid()
         
         self.loss_fn = nn.BCELoss()
-        self.val_accuracy = Accuracy(task="binary")
 
     def calculate_out_dim(self, input_size):
         with torch.no_grad():
