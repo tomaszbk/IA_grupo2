@@ -29,12 +29,12 @@ class BottleCNN(pl.LightningModule):
 
         # Capas totalmente conectadas
         self.fc1 = nn.Linear(self.flatten_dim, 128)
-        self.fc2 = nn.Linear(128, 3)
+        self.fc2 = nn.Linear(128, 2)
         
         # Métricas
-        self.train_acc = Accuracy(task='multiclass', num_classes=3)
-        self.val_acc = Accuracy(task='multiclass', num_classes=3)
-        self.test_acc = Accuracy(task='multiclass', num_classes=3)
+        self.train_acc = Accuracy(task='multiclass', num_classes=2)
+        self.val_acc = Accuracy(task='multiclass', num_classes=2)
+        self.test_acc = Accuracy(task='multiclass', num_classes=2)
         
         # Loss
         self.loss_fn = nn.CrossEntropyLoss()
