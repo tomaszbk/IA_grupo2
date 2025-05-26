@@ -14,7 +14,7 @@ from models.pipelines import augment_and_preprocess_pipeline, preprocessing_pipe
 
 # Configuración general
 BATCH_SIZE = 16
-EPOCHS = 1
+EPOCHS = 10
 LEARNING_RATE = 0.001
 IMG_SIZE = 128
 DATA_DIR = "./data/"
@@ -96,7 +96,7 @@ def train_model(model_class: pl.LightningModule, use_all_data):
         callbacks=[callback],
     )
 
-    trainer.fit(model, train_loader)
+    trainer.fit(model, train_loader, test_loader)
     if test_loader is not None:
         trainer.test(model, test_loader)
 
