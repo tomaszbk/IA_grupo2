@@ -50,6 +50,14 @@ uv sync --extra cpu
 uv sync --extra cu128
 ```
 
+<br /> 
+
+### torchvision
+```
+uv pip install torchvision
+```
+
+
 ## Ejecución
 
 Primero se debe ir al directorio del proyecto
