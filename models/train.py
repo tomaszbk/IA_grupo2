@@ -10,6 +10,7 @@ from torchvision import datasets
 
 from models.callbacks import LogMisclassifiedImages
 from models.cnn_model import BottleCNN
+from models.mlp_model import BottleMLP
 from models.pipelines import augment_and_preprocess_pipeline, preprocessing_pipeline
 
 # Configuración general
@@ -108,4 +109,5 @@ def train_model(model_class: pl.LightningModule, use_all_data):
 
 # Ejemplo de uso:
 if __name__ == "__main__":
-    train_model(BottleCNN, use_all_data=False)
+    train_model(BottleCNN, use_all_data=True)
+    train_model(BottleMLP, use_all_data=True)
