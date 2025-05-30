@@ -79,8 +79,13 @@ def submit_thumbs_feedback(is_correct: bool):
         mlflow.set_tag("prediction_correct", "yes" if is_correct else "no")
         if is_correct:
             # If thumbs up, the predicted class is the correct class
+            mlflow.set_tag("correct_class", current_run_info["predicted_class"])
+        else:
             mlflow.set_tag(
-                "user_feedback_correct_class", current_run_info["predicted_class"]
+                "correct_class",
+                "En buen estado"
+                if current_run_info["predicted_class"] == "Rota"
+                else "Rota",
             )
         # Don't reset run info for thumbs down - keep it for detailed feedback
 
@@ -98,47 +103,7 @@ def submit_thumbs_feedback(is_correct: bool):
         return (
             gr.update(variant="secondary"),  # thumbs_up_btn - normal
             gr.update(variant="stop"),  # thumbs_down_btn - red
-            gr.update(visible=True),  # detailed_feedback_section - visible
         )
-
-
-# Función para manejar feedback detallado del usuario
-def submit_detailed_feedback(correct_class: str):
-    global current_run_info
-
-    if current_run_info["run_id"] is None:
-        return (
-            "❌ No hay predicción activa para enviar feedback",
-            gr.update(variant="secondary"),  # reset thumbs_up_btn
-            gr.update(variant="secondary"),  # reset thumbs_down_btn
-            gr.update(visible=False),  # hide detailed_feedback_section
-        )
-
-    if correct_class == "Sin feedback":
-        return (
-            "ℹ️ No se envió feedback",
-            gr.update(variant="secondary"),  # reset thumbs_up_btn
-            gr.update(variant="secondary"),  # reset thumbs_down_btn
-            gr.update(visible=False),  # hide detailed_feedback_section
-        )
-
-    # Log the correct class to the existing run
-    with mlflow.start_run(run_id=current_run_info["run_id"]):
-        mlflow.set_tag("user_feedback_correct_class", correct_class)
-        mlflow.set_tag(
-            "prediction_correct",
-            "yes" if correct_class == current_run_info["predicted_class"] else "no",
-        )
-
-    # Reset run info
-    current_run_info = {"run_id": None, "img": None, "predicted_class": None}
-
-    return (
-        f"✅ Feedback enviado: Clase correcta es '{correct_class}'",
-        gr.update(variant="secondary"),  # reset thumbs_up_btn
-        gr.update(variant="secondary"),  # reset thumbs_down_btn
-        gr.update(visible=False),  # hide detailed_feedback_section
-    )
 
 
 # Interfaz Gradio
@@ -163,21 +128,6 @@ with gr.Blocks(title="Clasificador de Botellas") as demo:
                 thumbs_up_btn = gr.Button("👍 Correcto", variant="secondary")
                 thumbs_down_btn = gr.Button("👎 Incorrecto", variant="secondary")
 
-            # Detailed feedback (only visible when thumbs down is clicked)
-            detailed_feedback_section = gr.Column(visible=False)
-            with detailed_feedback_section:
-                gr.Markdown("### 📝 Feedback Detallado")
-                gr.Markdown("Selecciona la clase correcta:")
-                feedback_dropdown = gr.Dropdown(
-                    choices=["Sin feedback"] + CLASS_NAMES,
-                    value="Sin feedback",
-                    label="Clase correcta",
-                )
-                feedback_btn = gr.Button("📤 Enviar Feedback Detallado")
-                detailed_feedback_output = gr.Textbox(
-                    label="Estado del feedback", interactive=False
-                )
-
     # Event handlers
     predict_btn.click(
         fn=predict,
@@ -186,31 +136,19 @@ with gr.Blocks(title="Clasificador de Botellas") as demo:
             prediction_output,
             thumbs_up_btn,
             thumbs_down_btn,
-            detailed_feedback_section,
         ],
     )
 
     thumbs_up_btn.click(
         fn=lambda: submit_thumbs_feedback(True),
-        outputs=[thumbs_up_btn, thumbs_down_btn, detailed_feedback_section],
+        outputs=[thumbs_up_btn, thumbs_down_btn],
         show_progress=False,
     )
 
     thumbs_down_btn.click(
         fn=lambda: submit_thumbs_feedback(False),
-        outputs=[thumbs_up_btn, thumbs_down_btn, detailed_feedback_section],
+        outputs=[thumbs_up_btn, thumbs_down_btn],
         show_progress=False,
-    )
-
-    feedback_btn.click(
-        fn=submit_detailed_feedback,
-        inputs=feedback_dropdown,
-        outputs=[
-            detailed_feedback_output,
-            thumbs_up_btn,
-            thumbs_down_btn,
-            detailed_feedback_section,
-        ],
     )
 
 demo.launch()
