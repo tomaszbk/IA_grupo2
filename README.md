@@ -7,25 +7,6 @@ Para el análisis del entrenamiento y evaluación de los modelos, se utiliza MLf
 Además, el proyecto cuenta con una interfaz web construida con Gradio, que permite a cualquier usuario cargar imágenes desde su computadora y obtener predicciones instantáneas, eligiendo si desea utilizar el modelo CNN o el MLP. Esta interfaz hace que el sistema sea accesible incluso para usuarios sin conocimientos técnicos, ofreciendo una experiencia práctica y visual para probar los modelos entrenados.
 
 ## Instalacion del software necesario
-### Python
-Primero es necesario instalar Python. Desde el siguiente link se puede descargar la última versión:<br /> 
-https://www.python.org/downloads/
-
-<br /> 
-
-### MLflow
-```bash
-pip install mlflow
-```
-
-<br /> 
-
-### Gradio
-```bash
-pip install gradio
-```
-
-<br /> 
 
 ### uv
 
@@ -33,29 +14,30 @@ Con bash
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
-<br /> Con Windows
-```
+<br>Con powershell
+```ps
 wget -qO- https://astral.sh/uv/install.sh | sh
 
 # o también se puede hacer con:
 
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
-<br /> Luego debemos ejecutar lo siguiente
+
+<br>Con pip
+```bash
+pip install uv
+```
+
+<br> Luego debemos ejecutar lo siguiente
 ```bash
 uv sync --extra cpu
 
-# o también se puede hacer con:
+# o para poder utilizar CUDA:
 
 uv sync --extra cu128
 ```
 
-<br /> 
-
-### torchvision
-```
-uv pip install torchvision
-```
+<br> 
 
 
 ## Ejecución
@@ -76,7 +58,8 @@ uv run -m models.train
 
 uv run -m --extra cu128 models.train
 ```
-<br /> Una vez que tengamos los dos modelos podemos ejecutar la aplicacion web con
+Ambos modelos seran guardados en el directorio `models/`.
+<br> Una vez que tengamos los dos modelos podemos ejecutar la aplicacion web con
 ```bash
 uv run models/serve.py
 ```
